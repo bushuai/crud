@@ -1,8 +1,20 @@
 <%-include header.ejs%>
    <%  if(user){%>
-    <a href="/user">users</a>
-    <a href="/add">add user</a>
-    <a href="/search">search user</a>
+   User:
+    <a href="/users">users</a>
+    <a href="/add/user">add user</a>
+    <br>
+    <br>
+    Post:
+    <a href="/posts">posts</a>
+    <a href="/add/post">new post</a>
+    <br>
+    <br>
+    Search:
+    <a href="/search">search</a>
+    <br>
+    <br>
+    Operation:
     <a href="/logout">logout</a>
     <%}else{%>
    <a href="/login">login </a> | 

@@ -1,0 +1,21 @@
+<%-include header %>
+<%
+  if(user){
+     user.forEach(function(u){
+%>
+    <p>username: <%=u.name %></p>
+    <p>password: <%=u.password %></p>
+<%
+    });
+   }
+
+   if(post){
+    post.forEach(function(p){
+    %>
+    <p>title: <%=p.title %></p>
+    <p>content: <%=p.content %></p>
+<%
+    });
+   }
+%>
+<%-include footer %>

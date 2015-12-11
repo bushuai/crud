@@ -1,0 +1,11 @@
+<%-include header.ejs%>
+<%
+  posts.forEach(function(post,index){
+%>
+  <div class="post-info">
+    <span><%=index +1%> <%=post.title%></span> |  <span><%=post.name%></span> | <a href="/delete/post/<%=post.title%>">delete</a>
+  </div>
+<%
+  });
+%>
+<%-include footer.ejs%>

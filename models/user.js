@@ -1,5 +1,4 @@
 var mongoose = require('./database');
-
 var Schema = mongoose.Schema;
 // 定义一个集合 Collection
 var userSchema = new Schema({
