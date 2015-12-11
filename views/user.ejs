@@ -1,0 +1,11 @@
+<%-include header.ejs%>
+<%
+  users.forEach(function(user,index){
+%>
+  <div class="user-info">
+    <span><%=index +1%> <%=user.name%></span> |  <span><%=user.password%></span> | <a href="/update/<%=user.name%>">update</a> |  <a href="/delete/<%=user.name%>">delete</a>
+  </div>
+<%
+  });
+%>
+<%-include footer.ejs%>

@@ -1,0 +1,15 @@
+<%-include header.ejs%>
+   <%  if(user){%>
+    <a href="/user">users</a>
+    <a href="/add">add user</a>
+    <a href="/search">search user</a>
+    <a href="/logout">logout</a>
+    <%}else{%>
+   <a href="/login">login </a> | 
+    <a href="/reg">reg</a>
+   <%  } %>
+  
+   <p><em><%=success%></em></p>
+<p></p>    
+<%-include footer %>
+
