@@ -12,6 +12,9 @@ module.exports = function(app) {
         });
     });
 
+    /*
+        GET LOGIN
+     */
     app.get('/login', function(req, res) {
         res.render('user_login', {
             title: 'User Login',
@@ -20,6 +23,9 @@ module.exports = function(app) {
         });
     });
 
+    /*
+       POST LOGIN 
+     */
     app.post('/login', function(req, res) {
         var name = req.body.name,
             password = req.body.password;
@@ -44,6 +50,9 @@ module.exports = function(app) {
 
     });
 
+    /*
+        GET LOGOUT
+     */
     app.get('/logout', check);
     app.get('/logout', function(req, res) {
         req.session.user = null;
@@ -51,6 +60,9 @@ module.exports = function(app) {
         res.redirect('/');
     });
 
+    /*
+        GET REG
+     */
     app.get('/reg', function(req, res) {
         res.render('user_reg', {
             title: 'User Register',
@@ -59,6 +71,9 @@ module.exports = function(app) {
             user: req.session.user
         });
     });
+    /*
+        POST REG
+     */
     app.post('/reg', function(req, res) {
         var name = req.body.name,
             password = req.body.password;
@@ -77,6 +92,9 @@ module.exports = function(app) {
         });
     });
 
+    /*
+        GET USERS
+     */
     app.get('/users', check);
     app.get('/users', function(req, res) {
         User.find({}).exec(function(err, users) {
@@ -89,6 +107,9 @@ module.exports = function(app) {
         });
     });
 
+    /*
+        GET POSTS
+     */
     app.get('/posts', check);
     app.get('/posts', function(req, res) {
         Post.find({}).exec(function(err, posts) {
@@ -101,6 +122,28 @@ module.exports = function(app) {
         });
     });
 
+    /*
+        GET POST/DETAIL/:TITLE
+     */
+    app.get('/post/detail/:title', check);
+    app.get('/post/detail/:title', function(req, res) {
+        var title = req.params.title;
+
+        Post.find({
+            title: title
+        }).exec(function(err, post) {
+            res.render('post_detail', {
+                title: 'Post Detail',
+                post: post,
+                error: req.flash('error').toString(),
+                success: req.flash('success').toString()
+            });
+        });
+    });
+
+    /*
+        GET ADD/:TYPE
+     */
     app.get('/add', check);
     app.get('/add/:type', function(req, res) {
         var type = req.params.type;
@@ -122,6 +165,9 @@ module.exports = function(app) {
         }
     });
 
+    /*
+        POST ADD/:TYPE
+     */
     app.post('/add/:type', function(req, res) {
         var type = req.params.type;
         switch (type) {
@@ -162,6 +208,9 @@ module.exports = function(app) {
         }
     });
 
+    /*
+        GET DELETE/:TYPE/:NAME
+     */
     app.get('/delete/:type/:name', function(req, res) {
         var type = req.params.type;
         switch (type) {
@@ -192,6 +241,9 @@ module.exports = function(app) {
         }
     });
 
+    /*
+        GET UPDATE/:TYPE/:NAME
+     */
     app.get('/update/:type/:name', function(req, res) {
         var type = req.params.type;
         switch (type) {
@@ -243,6 +295,9 @@ module.exports = function(app) {
         });
     });
 
+    /*
+    GET SEARCH
+     */
     app.get('/search', check);
     app.get('/search', function(req, res) {
         res.render('search', {
@@ -252,6 +307,9 @@ module.exports = function(app) {
         });
     });
 
+    /*
+    POST SEARCH
+     */
     app.post('/search', check);
     app.post('/search', function(req, res) {
         var type = req.body.type;
@@ -288,6 +346,9 @@ module.exports = function(app) {
 
     });
 
+    /*
+    CHECK
+     */
     function check(req, res, next) {
         if (!req.session.user) {
             req.flash('error', 'please log in ')

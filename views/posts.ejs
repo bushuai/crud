@@ -3,7 +3,7 @@
   posts.forEach(function(post,index){
 %>
   <div class="post-info">
-    <span><%=index +1%> <%=post.title%></span> |  <span><%=post.name%></span> | <a href="/delete/post/<%=post.title%>">delete</a>
+    <span><%=index +1%> <a href="/post/detail/<%=post.title%>"> <%=post.title%></a></span> |  <span><%=post.name%></span> | <a href="/delete/post/<%=post.title%>">delete</a>
   </div>
 <%
   });

@@ -3,7 +3,7 @@
   users.forEach(function(user,index){
 %>
   <div class="user-info">
-    <span><%=index +1%> <%=user.name%></span> |  <span><%=user.password%></span> | <a href="/update/<%=user.name%>">update</a> |  <a href="/delete/user/<%=user.name%>">delete</a>
+    <span><%=index +1%> <%=user.name%></span> |  <span><%=user.password%></span> | <a href="/update/user/<%=user.name%>">update</a> |  <a href="/delete/user/<%=user.name%>">delete</a>
   </div>
 <%
   });

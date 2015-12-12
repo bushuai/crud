@@ -1,0 +1,12 @@
+<%-include header.ejs%>
+<% if(post){
+  post.forEach(function(p){
+ %>
+ <p>Title:<%=p.title%></p>
+ <hr>
+ <p><%=p.content%></p>
+ <p>Author:<%=p.name%> at <%=p.time%></p>
+ <%   
+  });
+}%>
+<%-include footer.ejs%>
