@@ -1,12 +1,8 @@
 <%-include header.ejs%>
-<% if(post){
-  post.forEach(function(p){
- %>
- <p>Title:<%=p.title%></p>
+
+ <p>Title:<%=post.title%></p>
  <hr>
- <p><%=p.content%></p>
- <p>Author:<%=p.name%> at <%=p.time%></p>
- <%   
-  });
-}%>
+ <p><%- post.content%></p>
+ <p>Author:<%=post.name%> at <%=post.time%></p>
+
 <%-include footer.ejs%>

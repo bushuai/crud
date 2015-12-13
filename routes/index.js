@@ -1,5 +1,6 @@
 var User = require('../models/user'),
-    Post = require('../models/post');
+    Post = require('../models/post'),
+    markdown = require('markdown').markdown;
 
 module.exports = function(app) {
 
@@ -129,9 +130,10 @@ module.exports = function(app) {
     app.get('/post/detail/:title', function(req, res) {
         var title = req.params.title;
 
-        Post.find({
+        Post.findOne({
             title: title
         }).exec(function(err, post) {
+            post.content = markdown.toHTML(post.content);
             res.render('post_detail', {
                 title: 'Post Detail',
                 post: post,
@@ -250,7 +252,7 @@ module.exports = function(app) {
             case 'user':
                 var name = req.params.name;
 
-                User.find({
+                User.findOne({
                     name: name
                 }, function(err, user) {
                     res.render('update_user', {
@@ -264,9 +266,9 @@ module.exports = function(app) {
             case 'post':
                 var title = req.params.name;
 
-                Post.find({
+                Post.findOne({
                     title: title
-                }, function(err, user) {
+                }, function(err, post) {
                     res.render('update_post', {
                         title: 'Update Post',
                         post: post,
@@ -316,7 +318,7 @@ module.exports = function(app) {
         switch (type) {
             case 'user':
                 var name = req.body.s;
-                User.find({
+                User.findOne({
                     name: name
                 }, function(err, user) {
                     res.render('search_result', {
@@ -325,14 +327,15 @@ module.exports = function(app) {
                         post: null,
                         error: req.flash('error').toString(),
                         success: req.flash('success').toString()
-                    })
+                    });
                 });
                 break;
             case 'post':
                 var name = req.body.s;
-                Post.find({
+                Post.findOne({
                     title: name
                 }, function(err, post) {
+                    post.content = markdown.toHTML(post.content);
                     res.render('search_result', {
                         title: 'Search Result',
                         user: null,
