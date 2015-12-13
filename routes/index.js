@@ -1,6 +1,19 @@
 var User = require('../models/user'),
     Post = require('../models/post'),
-    markdown = require('markdown').markdown;
+    markdown = require('markdown').markdown,
+    multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function(req, file, callback) {
+        callback(null, './uploads/')
+    },
+    filename: function(req, file, callback) {
+        callback(null, Math.random() + Date.now() + file.originalname);
+    }
+})
+var upload = multer({
+    storage: storage
+});
 
 module.exports = function(app) {
 
@@ -348,7 +361,23 @@ module.exports = function(app) {
         }
 
     });
+    /*
+        Upload
+     */
+    app.get('/upload', function(req, res) {
+        res.render('upload', {
+            title: 'File upload',
+            user: req.session.user,
+            error: req.flash('error').toString(),
+            success: req.flash('success').toString()
+        })
+    });
 
+    app.post('/upload', upload.single('file'), function(req, res) {
+        console.log(req.file.originalname);
+        req.flash('success', 'upload success');
+        res.redirect('/upload');
+    });
     /*
     CHECK
      */
