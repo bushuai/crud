@@ -14,7 +14,8 @@ var postSchema = new Schema({
     },
     name: {
         type: String
-    }
+    },
+    comments: []
 });
 
 var Post = mongoose.model('Post', postSchema);

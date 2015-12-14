@@ -1,5 +1,6 @@
 var User = require('../models/user'),
     Post = require('../models/post'),
+    Comment = require('../models/comment'),
     markdown = require('markdown').markdown,
     multer = require('multer');
 
@@ -126,14 +127,33 @@ module.exports = function(app) {
      */
     app.get('/posts', check);
     app.get('/posts', function(req, res) {
-        Post.find({}).exec(function(err, posts) {
-            res.render('posts', {
-                title: 'Post List',
-                posts: posts,
-                error: req.flash('error').toString(),
-                success: req.flash('success').toString()
-            });
+        var page = req.query.p;
+        page = parseInt(page) || 1;
+        console.log('current page :' + page);
+        var total = 0;
+        Post.find({}, function(err, posts) {
+            total = posts.length;
         });
+        Post.find({})
+            .limit(2)
+            .skip((page - 1) * 2)
+            .exec(function(err, posts) {
+                if (posts.comments) {
+                    posts.comments.forEach(function(comment) {
+                        comment.content = markdown.toHTML(comment.content);
+                    });
+                }
+
+                res.render('posts', {
+                    title: 'Post List',
+                    posts: posts,
+                    page: page,
+                    first: (page - 1) == 0,
+                    last: ((page - 1) * 2) + posts.length >= total,
+                    error: req.flash('error').toString(),
+                    success: req.flash('success').toString()
+                });
+            });
     });
 
     /*
@@ -146,15 +166,72 @@ module.exports = function(app) {
         Post.findOne({
             title: title
         }).exec(function(err, post) {
+            if (post.comments) {
+                post.comments.forEach(function(comment) {
+                    comment.content = markdown.toHTML(comment.content);
+                });
+            }
             post.content = markdown.toHTML(post.content);
+
             res.render('post_detail', {
                 title: 'Post Detail',
                 post: post,
+                user: req.session.user,
                 error: req.flash('error').toString(),
                 success: req.flash('success').toString()
             });
         });
     });
+
+    /*
+        Comment
+     */
+    app.post('/post/detail/:title', function(req, res) {
+        var user = req.session.user,
+            title = req.params.title,
+            content = req.body.content,
+            name = req.body.name,
+            website = req.body.website,
+            date = new Date(),
+            time = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate() + " " +
+            date.getHours() + ":" + (date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes()),
+            email = req.body.email,
+            website = req.body.website;
+        var comment = new Comment({
+            title: title,
+            time: time,
+            name: name,
+            content: content,
+            website: website
+        });
+
+        comment.save(function(err, comment) {
+            console.log(comment + ' has been saved.')
+            var name = comment.name,
+                title = comment.title,
+                time = comment.time,
+                content = comment.content,
+                website = comment.website;
+            Post.findOneAndUpdate({
+                name: name,
+                title: title
+            }, {
+                $push: {
+                    'comments': comment
+                }
+            }).exec(function(err) {
+                if (err) {
+                    req.flash('error', err);
+                }
+                req.flash('success', 'comment success');
+                res.redirect('back');
+            });
+        });
+    });
+
+
+
+
 
     /*
         GET ADD/:TYPE
@@ -378,6 +455,8 @@ module.exports = function(app) {
         req.flash('success', 'upload success');
         res.redirect('/upload');
     });
+
+
     /*
     CHECK
      */

@@ -1,8 +1,12 @@
 <%-include header.ejs%>
 
  <p>Title:<%=post.title%></p>
- <hr>
  <p><%- post.content%></p>
  <p>Author:<%=post.name%> at <%=post.time%></p>
+
+ <hr>
+<%=success%>
+<%=error%>
+<%- include comment %>
 
 <%-include footer.ejs%>
